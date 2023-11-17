@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import path from "path";
 import createError from "http-errors";
+import { AppDataSource } from "./config/connect";
 //For env File
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(logger("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+AppDataSource.initialize();
 router(app);
 
 // catch 404 and forward to error handler
