@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -11,4 +12,5 @@ export const AppDataSource = new DataSource({
   logging: true,
   entities: [__dirname + "/../**/*.entity.{js,ts}"],
   synchronize: true,
+  namingStrategy: new SnakeNamingStrategy(),   
 });
