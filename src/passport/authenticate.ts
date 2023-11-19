@@ -24,14 +24,16 @@ export const authenticateJwt = (req:Request, res:Response, next:NextFunction) =>
         }
     })(req, res, next);
 }  
-export const authenticateLocal = (req:Request, res:Response, next:NextFunction) => {
-    passport.authenticate('local', { session: false }, (err: any, user: User | false, info: IVerifyOptions) => {
-        if (err || !user) {
-          return res.status(401).json({ message: 'Authentication failed' });
-        }
-    
-        const token = sign({ sub: user.id }, JWT_SECRET_KEY, { expiresIn: '1h' });
-    
-        return res.json({ token });
-      })(req, res, next);
-}
+export const authenticateLocal =  (req:Request, res:Response, next:NextFunction) => {
+    return new Promise((resolve, reject) => {
+        passport.authenticate('local', { session: false }, (err: any, user: User | false, info: IVerifyOptions) => {
+           if (err || !user) {
+                reject(err);
+                return res.status(401).json({ message: 'Authentication failed' });
+           }else{
+                const token = sign({ sub: user.id }, JWT_SECRET_KEY, { expiresIn: '1h' });
+                resolve({token})
+           }
+         })(req, res, next);
+    }
+)}

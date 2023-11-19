@@ -7,6 +7,7 @@ import path from "path";
 import createError from "http-errors";
 import { AppDataSource } from "./config/connect";
 import passport from "passport";
+import passportConfig from './passport';
 //For env File
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 AppDataSource.initialize();
+passportConfig(passport)
 app.use(passport.initialize());
 router(app);
 
