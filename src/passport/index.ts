@@ -1,23 +1,23 @@
 import passport, { PassportStatic } from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
+import { AppDataSource } from '../config/connect';
+import { User } from '../entities/user.entity';
 
-// 예제 사용자 데이터 (실제 사용자 데이터로 교체해야 함)
-const users = [
-    { id: '1', username: 'testuser', password: 'password' },
-];
+const userRepository = AppDataSource.getRepository(User)
+
 // JWT Secret Key (should be stored securely)
 const JWT_SECRET_KEY = 'your-secret-key';
 export default (passport: PassportStatic) => {
   // Passport 설정
-  passport.use(new LocalStrategy((username, password, done) => {
-      const user = users.find(u => u.username === username && u.password === password);
+  passport.use(new LocalStrategy(async (username, password, done) => {
+    const user = await userRepository.findOne({where: {name:username, password: password}})
     
-      if (user) {
-        return done(null, user);
-      }
-    
-      return done(null, false, { message: '아이디 또는 비밀번호가 올바르지 않습니다.' });
+    if (user) {
+      return done(null, user);
+    }
+  
+    return done(null, false, { message: '아이디 또는 비밀번호가 올바르지 않습니다.' });
   }));
   
   // Passport JWT strategy
@@ -26,9 +26,8 @@ export default (passport: PassportStatic) => {
       secretOrKey: JWT_SECRET_KEY,
   };
   
-  passport.use(new JwtStrategy(jwtOptions, (payload, done) => {
-      const user = users.find(u => u.id === payload.sub);
-    
+  passport.use(new JwtStrategy(jwtOptions, async (payload, done) => {
+    const user = await userRepository.findOne({where: {userId: payload.sub}});
       if (user) {
         return done(null, user);
   

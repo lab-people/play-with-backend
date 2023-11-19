@@ -28,8 +28,8 @@ export const authenticateLocal =  (req:Request, res:Response, next:NextFunction)
     return new Promise((resolve, reject) => {
         passport.authenticate('local', { session: false }, (err: any, user: User | false, info: IVerifyOptions) => {
            if (err || !user) {
-                reject(err);
-                return res.status(401).json({ message: 'Authentication failed' });
+                // reject(err);
+                res.status(401).json({ message: 'Authentication failed' });
            }else{
                 const token = sign({ sub: user.id }, JWT_SECRET_KEY, { expiresIn: '1h' });
                 resolve({token})
