@@ -5,7 +5,7 @@ import { authenticateJwt } from "../../passport/authenticate";
 const router: Router = Router();
 
 router.get("/", authenticateJwt, getUser);
-router.get("/", getUser);
+router.get("/aaa", getUser);
 router.post("/login", login);
 router.post("/", addUser);
 
