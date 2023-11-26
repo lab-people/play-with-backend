@@ -4,13 +4,13 @@ import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
-  host: 'localhost',
+  host: "pfw0ltdr46khxib3.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
   port: 3306,
-  username: 'root',
-  password: '123123',
-  database: 'play',
+  username: "xzg5cklkaaaot1bw",
+  password: "pft21w9tplsl6os2",
+  database: "tdq44srq2ll5fsi4",
   logging: true,
   entities: [__dirname + "/../**/*.entity.{js,ts}"],
   synchronize: true,
-  namingStrategy: new SnakeNamingStrategy(),   
+  namingStrategy: new SnakeNamingStrategy(),
 });
