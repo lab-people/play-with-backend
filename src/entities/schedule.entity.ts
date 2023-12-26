@@ -50,7 +50,6 @@ import {
     type: "boolean",
     name: "open_yn",
     comment: "공개여부",
-    length: 45,
   })
   openYn!: boolean;
 

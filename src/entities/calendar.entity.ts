@@ -26,7 +26,6 @@ import {
       type: "bigint",
       name: "color_id",
       comment: "색상아이디",
-      length: 45,
     })
     colorId!: number;
   

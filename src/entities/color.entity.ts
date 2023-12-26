@@ -34,7 +34,6 @@ import {
         type: "bigint",
         name: "created_by",
         comment: "등록사용자",
-        length: 45,
     })
     createdBy!: number;
 
@@ -49,7 +48,6 @@ import {
         type: "bigint",
         name: "updated_by",
         comment: "수정사용자",
-        length: 45,
     })
     updatedBy!: number;
 
