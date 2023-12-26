@@ -6,7 +6,7 @@ import {
   } from "typeorm";
   
   @Entity({ synchronize: false, schema: "play" })
-  export class Celandar {
+  export class Calendar {
     @PrimaryGeneratedColumn({
       type: "bigint",
       name: "id",
@@ -23,12 +23,12 @@ import {
     title!: string;
   
     @Column({
-      type: "varchar",
+      type: "bigint",
       name: "color_id",
       comment: "색상아이디",
       length: 45,
     })
-    colorId!: string;
+    colorId!: number;
   
     @CreateDateColumn({
         type: "timestamp",
@@ -37,13 +37,14 @@ import {
         comment: "생성일시",
       })
       createdDt!: Date;
+
       @Column({
-          type: "varchar",
+          type: "bigint",
           name: "created_by",
           comment: "등록사용자",
-          length: 45,
         })
-        createdBy!: string;
+        createdBy!: number;
+
       @CreateDateColumn({
         type: "timestamp",
         name: "updated_dt",
@@ -51,12 +52,12 @@ import {
         comment: "수정일시",
       })
       updatedDt!: Date;
+
       @Column({
-          type: "varchar",
+          type: "bigint",
           name: "updated_by",
           comment: "수정사용자",
-          length: 45,
         })
-        updatedBy!: string;
+        updatedBy!: number;
   }
   

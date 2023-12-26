@@ -15,12 +15,11 @@ import {
     id!: number;
   
     @Column({
-      type: "varchar",
+      type: "bigint",
       name: "topic_id",
       comment: "토픽아이디",
-      length: 45,
     })
-    topicId!: string;
+    topicId!: number;
 
     @Column({
       type: "varchar",
@@ -34,7 +33,7 @@ import {
       type: "varchar",
       name: "contents",
       comment: "본문",
-      length: 45,
+      length: 1000,
     })
     contents!: string;
   
@@ -45,13 +44,14 @@ import {
       comment: "생성일시",
     })
     createdDt!: Date;
+
     @Column({
-        type: "varchar",
+        type: "bigint",
         name: "created_by",
         comment: "등록사용자",
-        length: 45,
       })
-      createdBy!: string;
+      createdBy!: number;
+
     @CreateDateColumn({
       type: "timestamp",
       name: "updated_dt",
@@ -59,12 +59,12 @@ import {
       comment: "수정일시",
     })
     updatedDt!: Date;
+
     @Column({
-        type: "varchar",
+        type: "bigint",
         name: "updated_by",
         comment: "수정사용자",
-        length: 45,
       })
-      updatedBy!: string;
+      updatedBy!: number;
   }
   
