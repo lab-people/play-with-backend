@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const User_1 = require("./User");
+const authenticate_1 = require("../../passport/authenticate");
+const router = (0, express_1.Router)();
+router.get("/", authenticate_1.authenticateJwt, User_1.getUser);
+router.get("/aaa", User_1.getTest);
+router.post("/login", User_1.login);
+router.post("/", User_1.addUser);
+exports.default = router;

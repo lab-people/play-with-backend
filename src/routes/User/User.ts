@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { authenticateLocal } from "../../passport/authenticate";
 import { AppDataSource } from "../../config/connect";
 import { User } from "../../entities/user.entity";
-
+import bcrypt from "bcryptjs";
 const userRepository = AppDataSource.getRepository(User);
 /**
  * 회원조회
@@ -54,15 +54,16 @@ export const addUser = async (
   try {
     const userData = req.body;
     const user = new User();
+
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(userData.password.toString(), salt);
     user.name = userData.name;
-    user.birth = userData.birth;
     user.email = userData.email;
-    user.gender = userData.gender;
-    user.nickName = userData.nickName;
-    user.password = userData.password;
+    user.password = hash;
     await userRepository.save(user);
     res.status(200).json({ message: "등록성공", result: {} });
-  } catch (error) {
+  } catch (error: any) {
+    console.error(error.message)
     res.status(500).json({ message: "서버에러", result: error });
   }
 };

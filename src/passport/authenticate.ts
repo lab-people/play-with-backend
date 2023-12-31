@@ -14,8 +14,7 @@ const JWT_SECRET_KEY = 'your-secret-key';
 
 export const authenticateJwt = (req:Request, res:Response, next:NextFunction) => {
     return passport.authenticate('jwt', {session: false}, async (err: any, user: User | false) => {
-        if(user){            
-
+        if(user){
             req.user = user;
             return next(); 
         }else{

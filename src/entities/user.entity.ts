@@ -10,10 +10,10 @@ import {
 export class User {
   @PrimaryGeneratedColumn({
     type: "bigint",
-    name: "user_id",
+    name: "id",
     comment: "유저아이디",
   })
-  userId!: number;
+  id!: number;
 
   @Column({
     type: "varchar",
@@ -27,7 +27,7 @@ export class User {
     type: "varchar",
     name: "password",
     comment: "비밀번호",
-    length: 45,
+    length: 200,
   })
   password!: string;
 
@@ -42,6 +42,7 @@ export class User {
     type: "varchar",
     name: "nick_name",
     comment: "닉네임",
+    nullable: true,
     length: 45,
   })
   nickName!: string;
@@ -57,6 +58,7 @@ export class User {
     type: "bigint",
     name: "profile_img_file_id",
     comment: "프로필 이미지 파일 id",
+    nullable: true,
   })
   profileImgFileId!: number;
 
@@ -64,6 +66,7 @@ export class User {
     name: "user_stts_cd",
     comment: "사용자 상태",
     length: 45,
+    nullable: true,
   })
   userSttsCd!: string;
 
@@ -71,6 +74,7 @@ export class User {
     name: "stts_message",
     comment: "상태 메시지",
     length: 500,
+    nullable: true,
   })
   sttsMessage!: string;
 
@@ -78,6 +82,7 @@ export class User {
     type: "bigint",
     name: "dept_id",
     comment: "부서 id",
+    nullable: true,
   })
   deptId!: number;
 
@@ -87,6 +92,7 @@ export class User {
     name: "position",
     comment: "직책",
     length: 50,
+    nullable: true,
   })
   position!: string;
 
@@ -95,6 +101,7 @@ export class User {
     name: "birth",
     comment: "생년월일",
     length: 45,
+    nullable: true,
   })
   birth!: string;
 
@@ -103,6 +110,7 @@ export class User {
     name: "phone",
     comment: "휴대폰번호",
     length: 45,
+    nullable: true,
   })
   phone!: string;
 
@@ -111,6 +119,7 @@ export class User {
     name: "gender",
     comment: "성별",
     length: 45,
+    nullable: true,
   })
   gender!: string;
   
