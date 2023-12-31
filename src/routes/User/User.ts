@@ -57,7 +57,6 @@ export const addUser = async (
 
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(userData.password.toString(), salt);
-    console.log(hash)
     user.name = userData.name;
     user.email = userData.email;
     user.password = hash;

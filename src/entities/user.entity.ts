@@ -13,7 +13,7 @@ export class User {
     name: "id",
     comment: "유저아이디",
   })
-  userId!: number;
+  id!: number;
 
   @Column({
     type: "varchar",
