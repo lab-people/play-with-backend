@@ -1,8 +1,9 @@
 import { Router } from "express";
-import {sendMail} from "./Mail";
+import {sendInviteMail, sendJoinMail} from "./Mail";
 
 const router: Router = Router();
 
-router.post("/", sendMail);
+router.post("/join", sendJoinMail);
+router.post("/invite", sendInviteMail);
 
 export default router;
