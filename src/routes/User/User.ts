@@ -3,7 +3,37 @@ import { authenticateLocal } from "../../passport/authenticate";
 import { AppDataSource } from "../../config/connect";
 import { User } from "../../entities/user.entity";
 import bcrypt from "bcryptjs";
+import {AuthMail} from "../../entities/authMail.entity";
 const userRepository = AppDataSource.getRepository(User);
+const authMailRepository = AppDataSource.getRepository(AuthMail);
+export const authMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+  try {
+    const {email, code} = req.body;
+
+    const findAuthMail = await authMailRepository.findOne({
+      where: {
+        email: email
+      }
+    });
+    if (!findAuthMail) {
+      return res.status(200).json({message: "존재하지 않는 이력입니다."})
+    }
+    if (code === findAuthMail.authNumber) {
+      await authMailRepository.update(findAuthMail.id, {
+        cmplYn: true
+      })
+    }
+
+    res.status(200).json({ message: "업데이트 성공", result: {} });
+  } catch (error: any) {
+    console.error(error.message)
+    res.status(500).json({ message: "서버에러", result: error });
+  }
+};
 /**
  * 회원조회
  * @param req
