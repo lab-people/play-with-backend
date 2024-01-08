@@ -1,8 +1,16 @@
 import {NextFunction, Request, Response} from "express";
 import nodemailer from 'nodemailer';
 import {senderInfo} from "../../config/senderInfo";
-
-export const sendMail = async (req: Request, res: Response, next: NextFunction) => {
+import {AuthMail} from "../../entities/authMail.entity";
+import {AppDataSource} from "../../config/connect";
+const authMailRepository = AppDataSource.getRepository(AuthMail);
+/**
+ * 회원가입 메일 발송
+ * @param req
+ * @param res
+ * @param next
+ */
+export const sendJoinMail = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const {email} = req.body;
         let code = createCode();
@@ -12,13 +20,47 @@ export const sendMail = async (req: Request, res: Response, next: NextFunction) 
         // 메일 내용
         const emailHtml = `<p>안녕하세요.</p>
         <p>` + serviceName + ` 인증 코드는 <strong>[` + code + `]</strong> 입니다.</p>`
-        // TODO: 인증코드 테이블 생성
+
+        const authMail = new AuthMail();
+        authMail.email = email;
+        authMail.authNumber = code;
+        authMail.cmplYn = false;
+        await authMailRepository.save(authMail);
+
+        await sendGmail(res, email, subject, emailHtml);
+        res.status(200).json({message: "메일전송"});
+    } catch (e) {
+
+    }
+}
+
+/**
+ * 팀초대 메일 발송
+ * @param req
+ * @param res
+ * @param next
+ */
+export const sendInviteMail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {email} = req.body;
+        const serviceName = "잔디잔디";
+        // 메일 제목
+        const subject = '[' + serviceName + '] 잔디잔디 팀 초대 메일이 도착하였습니다. ';
+        // 메일 내용
+        const emailHtml = `<p>안녕하세요.</p>
+        <p>` + serviceName + ` 잔디잔디 팀에 합류해 주세요.</p>
+        <bn/>
+        <button>참여하기</button>
+        `
+        // TODO: 이메일 버튼 링크에 팀 참여 api 추가
+        // TODO: 초대 이메일도 테이블로 관리, memberId랑 teamId 정보를 가지고 있어야 함
         sendGmail(res, email, subject, emailHtml);
         res.status(200).json({message: "메일전송"});
     } catch (e) {
 
     }
 }
+
 /**
  * 인증 메일 전송
  * @param res

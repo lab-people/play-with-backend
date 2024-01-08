@@ -4,6 +4,28 @@ import { Team } from "../../entities/team.entity";
 import {TeamMember} from "../../entities/teamMember.entity";
 const teamRepository = AppDataSource.getRepository(Team);
 const teamMemberRepository = AppDataSource.getRepository(TeamMember);
+
+/**
+ * 팀 초대 승인
+ * @param req
+ * @param res
+ * @param next
+ */
+export const joinTeam = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+  try {
+    const {memberId, teamId} = req.body;
+    await addTeamMember(teamId, memberId);
+
+    res.status(200).json({ message: "등록성공", result: {} });
+  } catch (error: any) {
+    console.error(error.message)
+    res.status(500).json({ message: "서버에러", result: error });
+  }
+};
 /**
  * 팀 최초 생성
  * @param req
