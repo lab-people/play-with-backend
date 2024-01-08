@@ -6,7 +6,7 @@ import {
   Timestamp,
 } from "typeorm";
 
-@Entity({ synchronize: true, schema: "play" })
+@Entity({ synchronize: false, schema: "play" })
 export class Team {
   @PrimaryGeneratedColumn({
     type: "bigint",
