@@ -1,30 +1,55 @@
-import { NextFunction, Request, Response } from "express";
-import { AppDataSource } from "../../config/connect";
-import { Team } from "../../entities/team.entity";
+import {NextFunction, Request, Response} from "express";
+import {AppDataSource} from "../../config/connect";
+import {Team} from "../../entities/team.entity";
 import {TeamMember} from "../../entities/teamMember.entity";
+import {InviteMail} from "../../entities/inviteMail.entity";
+import {User} from "../../entities/user.entity";
+
 const teamRepository = AppDataSource.getRepository(Team);
 const teamMemberRepository = AppDataSource.getRepository(TeamMember);
-
+const inviteMailRepository = AppDataSource.getRepository(InviteMail);
+const userRepository = AppDataSource.getRepository(User);
 /**
  * 팀 초대 승인
  * @param req
  * @param res
  * @param next
  */
-export const joinTeam = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-  try {
-    const {memberId, teamId} = req.body;
-    await addTeamMember(teamId, memberId);
+export const joinTeam = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        // TODO: 초대이메일 id 쿼리스트링으로
+        const {id} = req.body;
 
-    res.status(200).json({ message: "등록성공", result: {} });
-  } catch (error: any) {
-    console.error(error.message)
-    res.status(500).json({ message: "서버에러", result: error });
-  }
+        const findInviteEmail = await inviteMailRepository.findOne({
+            where: {
+                id: id
+            }
+        });
+
+        if (findInviteEmail) {
+            const findUser = await userRepository.findOne({
+                where: {
+                    email: findInviteEmail.email
+                }
+            })
+            if (findUser) {
+                await addTeamMember(findInviteEmail.teamId, findUser.id);
+            }
+            await inviteMailRepository.update(findInviteEmail.id, {
+                cmplYn: true
+            })
+            res.status(200).json({message: "등록성공", result: {}});
+            
+        } else {
+            res.status(500).json({message: "정보없음"});
+        }
+       
+       
+   
+    } catch (error: any) {
+        console.error(error.message)
+        res.status(500).json({message: "서버에러", result: error});
+    }
 };
 /**
  * 팀 최초 생성
@@ -33,28 +58,24 @@ export const joinTeam = async (
  * @param next
  */
 
-export const addInitialTeam = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addInitialTeam = async (req: Request, res: Response, next: NextFunction) => {
+    try {
 
-    const teamData = req.body;
-    const team = new Team();
+        const teamData = req.body;
+        const team = new Team();
 
-    team.name = teamData.name;
-    team.domain = teamData.domain;
-    team.rootEmail = teamData.rootEmail;
+        team.name = teamData.name;
+        team.domain = teamData.domain;
+        team.rootEmail = teamData.rootEmail;
 
-    const savedTeam = await teamRepository.save(team);
-    await addTeamMember(savedTeam.id, teamData.adminId);
+        const savedTeam = await teamRepository.save(team);
+        await addTeamMember(savedTeam.id, teamData.adminId);
 
-    res.status(200).json({ message: "등록성공", result: {} });
-  } catch (error: any) {
-    console.error(error.message)
-    res.status(500).json({ message: "서버에러", result: error });
-  }
+        res.status(200).json({message: "등록성공", result: {}});
+    } catch (error: any) {
+        console.error(error.message)
+        res.status(500).json({message: "서버에러", result: error});
+    }
 };
 
 /**
@@ -63,9 +84,9 @@ export const addInitialTeam = async (
  * @param memberId
  */
 const addTeamMember = async (teamId: number, memberId: number) => {
-  const teamMember = new TeamMember();
-  teamMember.teamId = teamId;
-  teamMember.memberId = memberId;
+    const teamMember = new TeamMember();
+    teamMember.teamId = teamId;
+    teamMember.memberId = memberId;
 
-  await teamMemberRepository.save(teamMember);
+    await teamMemberRepository.save(teamMember);
 }

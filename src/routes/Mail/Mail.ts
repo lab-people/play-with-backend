@@ -3,7 +3,9 @@ import nodemailer from 'nodemailer';
 import {senderInfo} from "../../config/senderInfo";
 import {AuthMail} from "../../entities/authMail.entity";
 import {AppDataSource} from "../../config/connect";
+import {InviteMail} from "../../entities/inviteMail.entity";
 const authMailRepository = AppDataSource.getRepository(AuthMail);
+const inviteMailRepository = AppDataSource.getRepository(InviteMail);
 /**
  * 회원가입 메일 발송
  * @param req
@@ -42,19 +44,27 @@ export const sendJoinMail = async (req: Request, res: Response, next: NextFuncti
  */
 export const sendInviteMail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const {email} = req.body;
+        const {email, teamId} = req.body;
+
+        const inviteMail = new InviteMail();
+        inviteMail.email = email;
+        inviteMail.teamId = teamId;
+        inviteMail.cmplYn = false;
+
+        const savedId = await inviteMailRepository.save(inviteMail);
+
         const serviceName = "잔디잔디";
         // 메일 제목
         const subject = '[' + serviceName + '] 잔디잔디 팀 초대 메일이 도착하였습니다. ';
         // 메일 내용
         const emailHtml = `<p>안녕하세요.</p>
         <p>` + serviceName + ` 잔디잔디 팀에 합류해 주세요.</p>
-        <bn/>
+        <br/>
         <button>참여하기</button>
         `
-        // TODO: 이메일 버튼 링크에 팀 참여 api 추가
-        // TODO: 초대 이메일도 테이블로 관리, memberId랑 teamId 정보를 가지고 있어야 함
-        sendGmail(res, email, subject, emailHtml);
+        // TODO: 이메일 버튼 링크에 팀 참여 api 호출 추가
+        await sendGmail(res, email, subject, emailHtml);
+
         res.status(200).json({message: "메일전송"});
     } catch (e) {
 
