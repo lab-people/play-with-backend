@@ -4,5 +4,5 @@ import {addInitialTeam, joinTeam} from "./Team";
 const router: Router = Router();
 
 router.post("/", addInitialTeam);
-router.post("/join", joinTeam)
+router.get("/join", joinTeam)
 export default router;

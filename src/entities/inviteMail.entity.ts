@@ -25,13 +25,13 @@ export class InviteMail {
 
     @Column({
         type: "bigint",
-        name: "teamId",
+        name: "team_id",
         comment: "팀id",
     })
     teamId!: number;
 
     @Column("boolean", {
-        name: "cmplYn",
+        name: "cmpl_yn",
         comment: "가입여부",
     })
     cmplYn!: boolean;

@@ -17,14 +17,16 @@ const userRepository = AppDataSource.getRepository(User);
  */
 export const joinTeam = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        // TODO: 초대이메일 id 쿼리스트링으로
-        const {id} = req.body;
+        const inviteMailId = req.query.id;
+        let findInviteEmail;
+        if (inviteMailId ) {
 
-        const findInviteEmail = await inviteMailRepository.findOne({
-            where: {
-                id: id
-            }
-        });
+            findInviteEmail = await inviteMailRepository.findOne({
+                where: {
+                    id: Number(inviteMailId)
+                }
+            });
+        }
 
         if (findInviteEmail) {
             const findUser = await userRepository.findOne({

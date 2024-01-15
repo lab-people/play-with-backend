@@ -52,7 +52,7 @@ export const sendInviteMail = async (req: Request, res: Response, next: NextFunc
         inviteMail.cmplYn = false;
 
         const savedId = await inviteMailRepository.save(inviteMail);
-
+        const link = `http://localhost:3005/api/team/join?id=${savedId.id}`
         const serviceName = "잔디잔디";
         // 메일 제목
         const subject = '[' + serviceName + '] 잔디잔디 팀 초대 메일이 도착하였습니다. ';
@@ -60,7 +60,7 @@ export const sendInviteMail = async (req: Request, res: Response, next: NextFunc
         const emailHtml = `<p>안녕하세요.</p>
         <p>` + serviceName + ` 잔디잔디 팀에 합류해 주세요.</p>
         <br/>
-        <button>참여하기</button>
+        <a href="${link}" type="button">참여하기</a>
         `
         // TODO: 이메일 버튼 링크에 팀 참여 api 호출 추가
         await sendGmail(res, email, subject, emailHtml);
